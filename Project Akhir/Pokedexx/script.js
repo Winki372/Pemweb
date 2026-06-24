@@ -9,13 +9,18 @@ const modalBody = document.getElementById('modal-body');
 
 let currentPokemonList = [];
 let globalPokemonList = [];
+let debounceTimer;
 
 const genConfig = {
     1: { limit: 151, offset: 0 },
     2: { limit: 100, offset: 151 },
     3: { limit: 135, offset: 251 },
     4: { limit: 107, offset: 386 },
-    5: { limit: 156, offset: 493 }
+    5: { limit: 156, offset: 493 },
+    6: { limit: 72, offset: 649 },
+    7: { limit: 88, offset: 721 },
+    8: { limit: 96, offset: 809 },
+    9: { limit: 120, offset: 905 }
 };
 
 async function fetchGeneration(genNum) {
@@ -43,7 +48,7 @@ async function fetchGeneration(genNum) {
 
 async function initGlobalData() {
     try {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000');
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
         const data = await response.json();
 
         globalPokemonList = data.results.map(p => {
@@ -142,19 +147,23 @@ async function openPokemonDetail(id) {
 }
 
 searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase().trim();
+    clearTimeout(debounceTimer);
 
-    if (query.length === 0) {
-        const activeGen = document.querySelector('.tab-btn.active').dataset.gen;
-        fetchGeneration(activeGen);
-        return;
-    }
+    debounceTimer = setTimeout(() => {
+        const query = e.target.value.toLowerCase().trim();
 
-    const filtered = globalPokemonList.filter(p =>
-    p.name.includes(query) || p.id.toString() === query
-    );
+        if (query.length === 0) {
+            const activeGen = document.querySelector('.tab-btn.active').dataset.gen;
+            fetchGeneration(activeGen);
+            return;
+        }
 
-    displayPokemon(filtered.slice(0, 20));
+        const filtered = globalPokemonList.filter(p =>
+            p.name.includes(query) || p.id.toString() === query
+        );
+
+        displayPokemon(filtered.slice(0, 20));
+    }, 300);
 });
 
 tabButtons.forEach(btn => {
@@ -167,7 +176,7 @@ tabButtons.forEach(btn => {
 });
 
 surpriseBtn.addEventListener('click', () => {
-    const randomId = Math.floor(Math.random() * 1000) + 1;
+    const randomId = Math.floor(Math.random() * 1025) + 1;
     openPokemonDetail(randomId);
 });
 
