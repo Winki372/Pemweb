@@ -105,6 +105,7 @@ tabButtons.forEach(btn => {
 
 async function openPokemonDetail(id) {
     modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
     modalBody.innerHTML = '<p class="loading-spinner">Mengambil data detail...</p>';
     
     try {
@@ -123,7 +124,7 @@ async function openPokemonDetail(id) {
 
         let statsHtml = '';
         data.stats.forEach(s => {
-            const percentage = Math.min((s.base_stat / 150) * 100, 100);
+            const percentage = Math.min((s.base_stat / 255) * 100, 100);
             statsHtml += `
                 <div class="stat-row">
                     <span class="stat-name">${s.stat.name.replace('-', ' ')}</span>
@@ -136,7 +137,7 @@ async function openPokemonDetail(id) {
         });
 
         modalBody.innerHTML = `
-            <div class="modal-header-bg bg-${primaryType}">
+            <div class="modal-header-bg type-${primaryType}">
                 <img src="${imageUrl}" alt="${data.name}">
             </div>
             <div class="modal-details">
@@ -162,8 +163,26 @@ async function openPokemonDetail(id) {
     }
 }
 
-closeModalBtn.onclick = () => modal.classList.add('hidden');
-window.onclick = (e) => { if (e.target === modal) modal.classList.add('hidden'); };
+closeModalBtn.onclick = () => {
+    modal.classList.add('hidden');
+    document.body.style.overflow = ''; // Membuka kunci scroll
+};
+
+window.onclick = (e) => {
+    if (e.target === modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Membuka kunci scroll
+    }
+};
+
+const surpriseBtn = document.getElementById('surprise-btn');
+
+surpriseBtn.addEventListener('click', () => {
+    // Menghasilkan angka acak antara 1 hingga 1000
+    const randomId = Math.floor(Math.random() * 1000) + 1;
+    // Langsung tembak ke fungsi pemanggil modal API
+    openPokemonDetail(randomId);
+});
 
 fetchGeneration(1);
 initGlobalData();
