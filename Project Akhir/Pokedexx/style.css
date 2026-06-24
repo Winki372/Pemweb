@@ -88,15 +88,30 @@ font-size: 1rem;
 
 .gen-tabs {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.5rem;
     padding: 1rem;
     background: white;
     overflow-x: auto;
     border-bottom: 1px solid #e2e8f0;
+    scroll-behavior: smooth;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none:
+}
+
+.gen-tabs::-webkit-scrollbar{
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .gen-tabs {
+        justify-content: center;
+    }
 }
 
 .tab-btn {
+    flex-shrink: 0;
     padding: 0.5rem 1rem;
     border: 1px solid #e2e8f0;
     background: white;
@@ -326,8 +341,8 @@ display: none;
         to right,
         transparent,
         transparent calc(100% / 15 - 2px),
-                                          white calc(100% / 15 - 2px),
-                                          white calc(100% / 15)
+        white calc(100% / 15 - 2px),
+        white calc(100% / 15)
     );
     pointer-events: none;
 }
