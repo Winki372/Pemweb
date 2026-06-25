@@ -158,6 +158,8 @@ searchInput.addEventListener('input', (e) => {
             return;
         }
 
+        tabButtons.forEach(b => b.classList.remove('active'));
+
         const filtered = globalPokemonList.filter(p =>
             p.name.includes(query) || p.id.toString() === query
         );
